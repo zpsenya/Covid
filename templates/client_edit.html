@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+     <div class="container">
+        <body class="text-left">
+            <main class="form-signin w-100 m-auto">
+                <form id="edit_client" method="post">
+                        <h1 class="h3 mb-4 fw-normal">Please sign in</h1>
+
+                    {% csrf_token %}
+
+                <div class="form-error">{{ form.non_fields_errors }}</div>
+
+                    {% for f in form %}
+                        <div class="form-floating">
+                            <p><label for="floatingInput" for="{{ f.id_for_label }}">{{ f.label }}: </label>{{ f }}</p>
+                            <div class="form-error">{{ f.errors }}</div>
+                         </div>
+                    {% endfor %}
+
+                    <button form="edit_client" class="btn btn-outline-primary me-2" type="submit">Save Changes</button>
+                    <a class="btn btn-outline-primary me-2" href="/clients/{{ detail.pk }}"> Not Save </a>
+                        <p class="mt-5 mb-3 text-muted">© 2022</p>
+                </form>
+            </main>
+        </body>
+    </div>
+
+{% endblock %}
+
+

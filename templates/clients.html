@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container">
+    <div class="mw6 center pa3 sans-serif">
+
+
+        {% for c in clients %}
+             <ul class="list-group">
+
+
+                <li class="list-group-item mt-2">
+
+                    <p class="mb2">Name/Surname: {{ c.name }} {{ c.surname }}</p>
+
+                    <p class="mb2">Status: {{ c.is_corona }}</p>
+
+                    <a class="btn btn-outline-primary me-2" href="{{ c.id }}"> User Detail </a>
+                    <a class="btn btn-outline-primary me-2" href="client_delete/{{ c.id }}"> Delete User </a>
+
+
+
+
+
+                </li>
+
+            </ul>
+
+        {% endfor %}
+
+    </div>
+    </div>
+{% endblock %}

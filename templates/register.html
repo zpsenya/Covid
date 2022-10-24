@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container">
+        <body class="text-left">
+            <main class="form-signin w-100 m-auto">
+                <form method="post">
+                        <h1 class="h3 mb-4 fw-normal">Please sign in</h1>
+
+                    {% csrf_token %}
+                    {% for f in form %}
+                        <div class="form-floating">
+                            <p><label for="floatingInput" for="{{ f.id_for_label }}">{{ f.label }}: </label>{{ f }}</p>
+                            <div class="form-error">{{ f.errors }}</div>
+                         </div>
+                    {% endfor %}
+
+                     <button class="w-100 btn btn-lg btn-primary" type="submit">Register</button>
+                        <p class="mt-5 mb-3 text-muted">© 2022</p>
+                </form>
+            </main>
+        </body>
+    </div>
+{% endblock %}
+
+
+

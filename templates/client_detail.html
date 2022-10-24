@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+    <div class="container">
+        <p> Name: {{ detail.name }}</p>
+        <p> Surname: {{ detail.surname }}</p>
+        <p> Email: {{ detail.email }}</p>
+        <p> Doctor ID: {{ detail.id_doctor }}</p>
+        <p> Time of sample: {{ detail.time_of_analyse }}</p>
+        <p> Result: {{ detail.is_corona }}</p>
+
+        <a class="btn btn-outline-primary me-2" href="/clients"> Back to clients list </a>
+        <a class="btn btn-outline-primary me-2" href="/client_edit/{{ detail.pk }}"> Edit Client </a>
+
+        <a class="btn btn-outline-primary me-2" href="/pdf_view/{{ detail.pk }}"> PDF View </a>
+        <a class="btn btn-outline-primary me-2" href="/pdf_download/{{ detail.pk }}"> PDF Download </a>
+
+        <a class="btn btn-outline-primary me-2" href="/send_email/{{ detail.pk }}"> Send Email </a>
+    </div>
+
+{% endblock %}
