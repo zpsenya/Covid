@@ -27,7 +27,7 @@ def send_email(request, pk):
         "Surname": detail.surname,
         "Status": detail.is_corona,
         "Email": detail.email,
-        "Doctor_ID": detail.id_doctor,
+        "Doctor_ID": detail.doctor_id,
         "Time_Sample": detail.time_of_analyse,
     }
     pdf = render_to_pdf('pdf_template.html', data)
@@ -38,7 +38,7 @@ def send_email(request, pk):
 
 def clients(request):
     doctor_id = request.user
-    detail = Clients.objects.filter(id_doctor=doctor_id.id)
+    detail = Clients.objects.filter(doctor_id=doctor_id.id)
     context = {
         "users": doctor_id,
         "clients": detail,
@@ -97,6 +97,7 @@ def user(request):
 
 
 def create_client(request):
+
     if request.method == 'POST':
         form = AddClientForm(request.POST)
         if form.is_valid():
@@ -108,7 +109,11 @@ def create_client(request):
 
     else:
         form = AddClientForm()
-    return render(request, 'create_client.html', {'form': form})
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'create_client.html', context)
 
 
 class RegisterUser(CreateView):
@@ -142,7 +147,6 @@ def render_to_pdf(template_src, context_dict):
 
 
 class ViewPDF(View):
-
     def get(self, request, pk, *args, **kwargs):
         detail = Clients.objects.get(pk=pk)
         data = {
@@ -150,7 +154,7 @@ class ViewPDF(View):
             "Surname": detail.surname,
             "Status": detail.is_corona,
             "Email": detail.email,
-            "Doctor_ID": detail.id_doctor,
+            "Doctor_ID": detail.doctor_id,
             "Time_Sample": detail.time_of_analyse,
         }
         pdf = render_to_pdf('pdf_template.html', data)
@@ -165,7 +169,7 @@ class DownloaderPDF(View):
             "Surname": detail.surname,
             "Status": detail.is_corona,
             "Email": detail.email,
-            "Doctor_ID": detail.id_doctor,
+            "Doctor_ID": detail.doctor_id,
             "Time_Sample": detail.time_of_analyse,
         }
         pdf = render_to_pdf('pdf_template.html', data)

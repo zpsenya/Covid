@@ -1,10 +1,11 @@
+import django.contrib.auth.forms
 from django.db import models
 
 
 class Clients(models.Model):
     name = models.TextField(max_length=80)
     surname = models.TextField(max_length=80)
-    id_doctor = models.IntegerField()
+    doctor_id = models.ForeignKey(django.contrib.auth.forms.UserModel, on_delete=models.CASCADE)
     time_create = models.DateTimeField(auto_now_add=True, verbose_name="Time of create")
     time_update = models.DateTimeField(auto_now=True, verbose_name="Time of update")
     time_of_analyse = models.DateTimeField(verbose_name="Time of analyse")
@@ -15,13 +16,7 @@ class Clients(models.Model):
         return f'Name is {self.name}'
 
 
-class Users(models.Model):
-    id = models.IntegerField(primary_key=True)
-    name = models.TextField(max_length=80)
-    surname = models.TextField(max_length=80)
 
-    def __repr__(self):
-        return f'Name is {self.name}'
 
 
 

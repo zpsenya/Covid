@@ -142,7 +142,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static/']
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_HOST = 'smtp.ukr.net'
-EMAIL_PORT = 465 # 2525
+EMAIL_PORT = 2525
 EMAIL_HOST_USER = 'zpsenya1@ukr.net'
 EMAIL_HOST_PASSWORD = 'OwpDSw899MAYOtxr'
 EMAIL_USE_TLS = False
