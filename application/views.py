@@ -180,7 +180,7 @@ class DownloadPDF(View):
         pdf = render_to_pdf('pdf_template.html', data)
 
         response = HttpResponse(pdf, content_type='application/pdf')
-        filename = f'Result_{data["Name"]}_{data["Surname"]}_{datetime.datetime.now()}'
+        filename = f'Result_{data["Name"]}_{data["Surname"]}_{datetime.datetime.now()}.pdf'
         content = f"attachment; filename={filename}"
         response['Content-Disposition'] = content
         return response
