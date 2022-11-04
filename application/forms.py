@@ -10,13 +10,11 @@ class AddClientForm(forms.ModelForm):
     name = forms.CharField(widget=forms.TextInput(attrs={'class': "form-control"}), label='Name')
     surname = forms.CharField(widget=forms.TextInput(attrs={'class': "form-control"}), label='Surname')
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': "form-control"}), label='Email')
-   # doctor = forms.ModelChoiceField(queryset=django.contrib.auth.forms.UserModel.objects.order_by().
-   #                                    values_list('username', flat=True).distinct('username'), label='Doctor ID')
     time_of_analyse = forms.DateTimeField(initial=datetime.datetime.now())
     is_corona = forms.CheckboxInput(attrs={'class': "form-control"})
 
     class Meta:
-        model = Clients
+        model = Client
         fields = '__all__'
 
 

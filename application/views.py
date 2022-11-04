@@ -1,27 +1,27 @@
-from django.contrib.auth import logout, login
-from django.contrib.auth.views import LoginView
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
-from django.views.generic import CreateView
-from django.core.mail import EmailMultiAlternatives, EmailMessage
-from .forms import *
 
 from io import BytesIO
+
+from django.contrib.auth import logout, login
+from django.contrib.auth.views import LoginView
+from django.core.mail import EmailMultiAlternatives
 from django.http import HttpResponse
+from django.shortcuts import render, redirect
 from django.template.loader import get_template
+from django.urls import reverse_lazy
 from django.views import View
+from django.views.generic import CreateView
 from xhtml2pdf import pisa
 
-from application.forms import RegisterUserForm, LoginUserForm, AddClientForm
-from application.models import Clients
+from .forms import *
+from .utils import qr_code_generation
 
 
-def send_email(request, pk):
+def client_send_email_view(request, pk):
 
-    email = Clients.objects.get(pk=pk).email
+    email = Client.objects.get(pk=pk).email
     mail = EmailMultiAlternatives(subject='Covid Test', body='Your result in attachment',
                                   from_email='zpsenya1@ukr.net', to=[f'{email}'])
-    detail = Clients.objects.get(pk=pk)
+    detail = Client.objects.get(pk=pk)
     data = {
         "Name": detail.name,
         "Surname": detail.surname,
@@ -29,6 +29,7 @@ def send_email(request, pk):
         "Email": detail.email,
         "Doctor_ID": detail.doctor_id,
         "Time_Sample": detail.time_of_analyse,
+        "QR_Code": qr_code_generation(detail.name, detail.surname)
     }
     pdf = render_to_pdf('pdf_template.html', data)
     mail.attach(f'Result_{data["Name"]}_{data["Surname"]}_{datetime.datetime.now()}.pdf', pdf.content)
@@ -36,9 +37,9 @@ def send_email(request, pk):
     return redirect('clients')
 
 
-def clients(request):
+def client_list_page_view(request):
     doctor_id = request.user
-    detail = Clients.objects.filter(doctor_id=doctor_id.id)
+    detail = Client.objects.filter(doctor_id=doctor_id.id)
     context = {
         "users": doctor_id,
         "clients": detail,
@@ -47,8 +48,8 @@ def clients(request):
     return render(request, "clients.html", context)
 
 
-def client_detail(request, pk):
-    detail = Clients.objects.get(pk=pk)
+def client_detail_page_view(request, pk):
+    detail = Client.objects.get(pk=pk)
     context = {
         'detail': detail,
     }
@@ -56,7 +57,7 @@ def client_detail(request, pk):
 
 
 def client_edit(request, pk):
-    detail = Clients.objects.get(pk=pk)
+    detail = Client.objects.get(pk=pk)
 
     if request.method == 'POST':
         form = AddClientForm(request.POST, instance=detail)
@@ -74,8 +75,8 @@ def client_edit(request, pk):
     return render(request, 'client_edit.html', context)
 
 
-def client_delete(request, pk):
-    detail = Clients.objects.get(pk=pk)
+def client_delete_view(request, pk):
+    detail = Client.objects.get(pk=pk)
     detail.delete()
     return redirect('clients')
 
@@ -92,17 +93,17 @@ def about(request):
     return render(request, 'about.html')
 
 
-def user(request):
+def user_page_view(request):
     return render(request, 'user.html')
 
 
-def create_client(request):
+def client_create_form_view(request):
 
     if request.method == 'POST':
         form = AddClientForm(request.POST)
         if form.is_valid():
             try:
-                Clients.objects.create(**form.cleaned_data)
+                Client.objects.create(**form.cleaned_data)
                 return redirect('home')
             except:
                 form.add_error(None, 'Errors with add client')
@@ -132,7 +133,7 @@ class LoginUser(LoginView):
     template_name = 'login.html'
 
 
-def logout_user(request):
+def user_logout_view(request):
     logout(request)
     return redirect('login')
 
@@ -141,14 +142,15 @@ def render_to_pdf(template_src, context_dict):
     template = get_template(template_src)
     html = template.render(context_dict)
     result = BytesIO()
-    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result)
     if not pdf.err:
         return HttpResponse(result.getvalue(), content_type='application/pdf')
 
 
 class ViewPDF(View):
-    def get(self, request, pk, *args, **kwargs):
-        detail = Clients.objects.get(pk=pk)
+    @staticmethod
+    def get(request, pk, *args, **kwargs):
+        detail = Client.objects.get(pk=pk)
         data = {
             "Name": detail.name,
             "Surname": detail.surname,
@@ -156,14 +158,16 @@ class ViewPDF(View):
             "Email": detail.email,
             "Doctor_ID": detail.doctor_id,
             "Time_Sample": detail.time_of_analyse,
+            "QR_Code": qr_code_generation(detail.name, detail.surname)
         }
         pdf = render_to_pdf('pdf_template.html', data)
         return HttpResponse(pdf, content_type='application/pdf')
 
 
-class DownloaderPDF(View):
-    def get(self, request, pk, *args, **kwargs):
-        detail = Clients.objects.get(pk=pk)
+class DownloadPDF(View):
+    @staticmethod
+    def get(request, pk, *args, **kwargs):
+        detail = Client.objects.get(pk=pk)
         data = {
             "Name": detail.name,
             "Surname": detail.surname,
@@ -171,6 +175,7 @@ class DownloaderPDF(View):
             "Email": detail.email,
             "Doctor_ID": detail.doctor_id,
             "Time_Sample": detail.time_of_analyse,
+            "QR_Code": qr_code_generation(detail.name, detail.surname)
         }
         pdf = render_to_pdf('pdf_template.html', data)
 
@@ -179,3 +184,6 @@ class DownloaderPDF(View):
         content = f"attachment; filename={filename}"
         response['Content-Disposition'] = content
         return response
+
+
+
