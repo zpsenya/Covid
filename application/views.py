@@ -4,6 +4,7 @@ from io import BytesIO
 from django.contrib.auth import logout, login
 from django.contrib.auth.views import LoginView
 from django.core.mail import EmailMultiAlternatives
+from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template.loader import get_template
@@ -34,6 +35,8 @@ def client_send_email_view(request, pk):
     pdf = render_to_pdf('pdf_template.html', data)
     mail.attach(f'Result_{data["Name"]}_{data["Surname"]}_{datetime.datetime.now()}.pdf', pdf.content)
     mail.send()
+
+    messages.success(request, 'Email send sucesfull')
     return redirect('clients')
 
 
