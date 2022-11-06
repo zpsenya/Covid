@@ -19,7 +19,7 @@ from .utils import qr_code_generation
 def client_send_email_view(request, pk):
 
     email = Client.objects.get(pk=pk).email
-    mail = EmailMultiAlternatives(subject='Covid Test', body='Your result in attachment',
+    mail = EmailMultiAlternatives(subject='covid Test', body='Your result in attachment',
                                   from_email='zpsenya1@ukr.net', to=[f'{email}'])
     detail = Client.objects.get(pk=pk)
     data = {

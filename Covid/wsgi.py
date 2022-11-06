@@ -1,5 +1,5 @@
 """
-WSGI config for Covid project.
+WSGI config for covid project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
