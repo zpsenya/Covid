@@ -28,7 +28,7 @@ def client_send_email_view(request, pk):
         "Surname": detail.surname,
         "Status": detail.is_corona,
         "Email": detail.email,
-        "Doctor_ID": detail.doctor_id,
+        "Doctor_ID": detail.doctor,
         "Time_Sample": detail.time_of_analyse,
         "QR_Code": qr_code_generation(detail.name, detail.surname)
     }
@@ -159,7 +159,7 @@ class ViewPDF(View):
             "Surname": detail.surname,
             "Status": detail.is_corona,
             "Email": detail.email,
-            "Doctor_ID": detail.doctor_id,
+            "Doctor_ID": detail.doctor,
             "Time_Sample": detail.time_of_analyse,
             "QR_Code": qr_code_generation(detail.name, detail.surname)
         }
@@ -176,7 +176,7 @@ class DownloadPDF(View):
             "Surname": detail.surname,
             "Status": detail.is_corona,
             "Email": detail.email,
-            "Doctor_ID": detail.doctor_id,
+            "Doctor_ID": detail.doctor,
             "Time_Sample": detail.time_of_analyse,
             "QR_Code": qr_code_generation(detail.name, detail.surname)
         }
