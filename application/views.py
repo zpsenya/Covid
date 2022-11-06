@@ -56,7 +56,7 @@ def client_detail_page_view(request, pk):
     return render(request, 'client_detail.html', context)
 
 
-def client_edit(request, pk):
+def client_update_view(request, pk):
     detail = Client.objects.get(pk=pk)
 
     if request.method == 'POST':
@@ -104,7 +104,7 @@ def client_create_form_view(request):
         if form.is_valid():
             try:
                 Client.objects.create(**form.cleaned_data)
-                return redirect('home')
+                return redirect('user')
             except:
                 form.add_error(None, 'Errors with add client')
 
