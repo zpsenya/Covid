@@ -35,8 +35,8 @@ def client_send_email_view(request, pk):
     pdf = render_to_pdf('pdf_template.html', data)
     mail.attach(f'Result_{data["Name"]}_{data["Surname"]}_{datetime.datetime.now()}.pdf', pdf.content)
     mail.send()
-
-    messages.success(request, 'Email send sucesfull')
+    if mail:
+        messages.success(request, 'Email send sucesfull')
     return redirect('clients')
 
 
